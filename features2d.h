@@ -32,6 +32,11 @@ typedef void* SimpleBlobDetector;
 typedef void* BFMatcher;
 #endif
 
+typedef struct RetRegions {
+    Contours regions;
+    Rects bboxes;
+} RetRegions;
+
 AKAZE AKAZE_Create();
 void AKAZE_Close(AKAZE a);
 struct KeyPoints AKAZE_Detect(AKAZE a, Mat src);
@@ -63,6 +68,7 @@ struct KeyPoints KAZE_DetectAndCompute(KAZE a, Mat src, Mat mask, Mat desc);
 MSER MSER_Create();
 void MSER_Close(MSER a);
 struct KeyPoints MSER_Detect(MSER a, Mat src);
+struct RetRegions MSER_DetectRegions(MSER a, Mat src);
 
 ORB ORB_Create();
 void ORB_Close(ORB o);

@@ -1793,6 +1793,39 @@ func toRect(rect C.Rect) image.Rectangle {
 	return image.Rect(int(rect.x), int(rect.y), int(rect.x+rect.width), int(rect.y+rect.height))
 }
 
+func fromContours(ret C.Contours) [][]image.Point {
+
+	cArray := ret.contours
+	cLength := int(ret.length)
+	cHdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cArray)),
+		Len:  cLength,
+		Cap:  cLength,
+	}
+	sContours := *(*[]C.Points)(unsafe.Pointer(&cHdr))
+
+	contours := make([][]image.Point, cLength)
+	for i, pts := range sContours {
+		pArray := pts.points
+		pLength := int(pts.length)
+		pHdr := reflect.SliceHeader{
+			Data: uintptr(unsafe.Pointer(pArray)),
+			Len:  pLength,
+			Cap:  pLength,
+		}
+		sPoints := *(*[]C.Point)(unsafe.Pointer(&pHdr))
+
+		points := make([]image.Point, pLength)
+		for j, pt := range sPoints {
+			points[j] = image.Pt(int(pt.x), int(pt.y))
+		}
+		contours[i] = points
+	}
+
+	return contours
+
+}
+
 func toCPoints(points []image.Point) C.struct_Points {
 	cPointSlice := make([]C.struct_Point, len(points))
 	for i, point := range points {

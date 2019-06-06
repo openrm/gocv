@@ -207,6 +207,38 @@ struct KeyPoints MSER_Detect(MSER a, Mat src) {
     return ret;
 }
 
+struct RetRegions MSER_DetectRegions(MSER a, Mat src) {
+    std::vector<std::vector<cv::Point>> msers;
+    std::vector<cv::Rect> bboxes;
+    (*a)->detectRegions(*src, msers, bboxes);
+
+    Contour* points = new Contour[msers.size()];
+
+    for (size_t i = 0; i < msers.size(); i++) {
+        Point* pts = new Point[msers[i].size()];
+
+        for (size_t j = 0; j < msers[i].size(); j++) {
+            Point pt = {msers[i][j].x, msers[i][j].y};
+            pts[j] = pt;
+        }
+
+        points[i] = (Contour){pts, (int)msers[i].size()};
+    }
+
+    Contours cons = {points, (int)msers.size()};
+
+    Rect* rs = new Rect[bboxes.size()];
+
+    for (size_t i = 0; i < bboxes.size(); i++) {
+        cv::Rect cr = bboxes[i];
+        Rect r = {cr.x, cr.y, cr.width, cr.height};
+        rs[i] = r;
+    }
+
+    RetRegions ret = {cons, rs};
+    return ret;
+}
+
 FastFeatureDetector FastFeatureDetector_Create() {
     return new cv::Ptr<cv::FastFeatureDetector>(cv::FastFeatureDetector::create());
 }

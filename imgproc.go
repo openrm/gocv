@@ -386,34 +386,7 @@ func FindContours(src Mat, mode RetrievalMode, method ContourApproximationMode) 
 	ret := C.FindContours(src.p, C.int(mode), C.int(method))
 	defer C.Contours_Close(ret)
 
-	cArray := ret.contours
-	cLength := int(ret.length)
-	cHdr := reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(cArray)),
-		Len:  cLength,
-		Cap:  cLength,
-	}
-	sContours := *(*[]C.Points)(unsafe.Pointer(&cHdr))
-
-	contours := make([][]image.Point, cLength)
-	for i, pts := range sContours {
-		pArray := pts.points
-		pLength := int(pts.length)
-		pHdr := reflect.SliceHeader{
-			Data: uintptr(unsafe.Pointer(pArray)),
-			Len:  pLength,
-			Cap:  pLength,
-		}
-		sPoints := *(*[]C.Point)(unsafe.Pointer(&pHdr))
-
-		points := make([]image.Point, pLength)
-		for j, pt := range sPoints {
-			points[j] = image.Pt(int(pt.x), int(pt.y))
-		}
-		contours[i] = points
-	}
-
-	return contours
+	return fromContours(ret)
 }
 
 //ConnectedComponentsAlgorithmType specifies the type for ConnectedComponents
