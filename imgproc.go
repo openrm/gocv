@@ -1584,6 +1584,14 @@ func SepFilter2D(src Mat, dst *Mat, ddepth int, kernelX, kernelY Mat, anchor ima
 	C.SepFilter2D(src.p, dst.p, C.int(ddepth), kernelX.p, kernelY.p, anchorP, C.double(delta), C.int(borderType))
 }
 
+// Integral finds integral image of an image
+//
+// For further details, please see:
+// https://docs.opencv.org/master/d7/d1b/group__imgproc__misc.html#ga97b87bec26908237e8ba0f6e96d23e28
+func Integral(src Mat, sum *Mat, sdepth int) {
+    C.Integral(src.p, sum.p, C.int(sdepth))
+}
+
 // LogPolar remaps an image to semilog-polar coordinates space.
 //
 // For further details, please see:

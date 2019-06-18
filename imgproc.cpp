@@ -544,6 +544,18 @@ void SepFilter2D(Mat src, Mat dst, int ddepth, Mat kernelX, Mat kernelY, Point a
 	cv::sepFilter2D(*src, *dst, ddepth, *kernelX, *kernelY, anchorPt, delta, borderType);
 }
 
+void Integral(Mat src, Mat sum, int sdepth) {
+    cv::integral(*src, *sum, sdepth);
+}
+
+void IntegralSquared(Mat src, Mat sum, Mat sqsum, int sdepth, int sqdepth) {
+    cv::integral(*src, *sum, *sqsum, sdepth, sqdepth);
+}
+
+void IntegralTilted(Mat src, Mat sum, Mat sqsum, Mat tilted, int sdepth, int sqdepth) {
+    cv::integral(*src, *sum, *sqsum, *tilted, sdepth, sqdepth);
+}
+
 void LogPolar(Mat src, Mat dst, Point center, double m, int flags) {
 	cv::Point2f centerPt(center.x, center.y);
 	cv::logPolar(*src, *dst, centerPt, m, flags);
